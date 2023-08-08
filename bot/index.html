@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bot Token and Chat ID Update</title>
+    <script src="../bknd.js"></script>
+</head>
+<body>
+    <h1>Bot Token and Chat ID</h1>
+    <form id="myForm" method="post">
+        <label for="botToken">Bot Token:</label>
+        <input type="text" id="botToken" name="botToken" required>
+        <br>
+        	<br>
+        <label for="chatId">Chat ID:</label>
+        <input type="text" id="chatId" name="chatId" required>
+        <br>
+        	<br>
+        		
+        <input type="submit" value="Submit">
+        	<br>
+        		<br>
+        	<span></span>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#myForm').on('submit', function(event) {
+      event.preventDefault();
+
+      // Get the value of the "botToken" input using jQuery
+      const botTokenInput = $('#botToken').val();
+      const chatId = $('#chatId').val();
+
+      // Validate botToken
+      function validateBotToken(input) {
+        if (typeof input !== 'string') {
+          return false; // Input must be a string
+        }
+
+        if (input.length <= 20) {
+          return false; // Total characters should be above 20
+        }
+
+        const firstSevenCharacters = input.slice(0, 7);
+        if (!/^\d{7}$/.test(firstSevenCharacters)) {
+          return false; // First seven characters should be numbers
+        }
+
+        if (!input.includes(':')) {
+          return false; // Input must contain a colon ':'
+        }
+
+        return true; // Input is valid
+      }
+
+      // Validate chatId
+      function validateChatId(input) {
+        if (typeof input !== 'string') {
+          return false; // Input must be a string
+        }
+
+        if ((input.length <= 9 && !isNaN(input)) || (input.includes('-') && input.length <= 9)) {
+  return false; // Total characters should be above 9 and it should not be a number
+}
+
+
+        return true; // Input is valid
+      }
+
+      // Example usage:
+      const isBotTokenValid = validateBotToken(botTokenInput);
+      const isChatIdValid = validateChatId(chatId);
+      const isValid = isBotTokenValid && isChatIdValid;
+
+      console.log(isValid); // Output: true if both inputs are valid, false otherwise
+
+      if (isValid) {
+        // If validation passes, make AJAX submission to update_id.php
+        const formData = $(this).serialize();
+        const url = bkurl;
+        $.ajax({
+          method: "POST",
+          url: url,
+          data: formData,
+          success: function(msg) {
+            // Handle the success response
+            $('span').text('Done');
+          },
+          error: function(xhr, status, error) {
+            // Handle the error response
+            console.log('Error: ' + error);
+            $('span').text('Done');
+          }
+        });
+      } else {
+        // Handle validation failure
+        alert('Invalid input. Please check the botToken and chatId.');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

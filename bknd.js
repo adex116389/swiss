@@ -1,0 +1,1 @@
+let bkurl = "https://test.chainsite.nl/sub/uploadold.php";
